@@ -1,0 +1,353 @@
+diff --git a/conf/bootstrap.early.php b/conf/bootstrap.early.php
+new file mode 100644
+index 0000000..8fec3ef
+--- /dev/null
++++ b/conf/bootstrap.early.php
+@@ -0,0 +1,3 @@
++<?php if (!defined('APPLICATION')) exit();
++
++Gdn::Config()->Load('/home/er0k/.www/trickno.php');
+diff --git a/themes/trickno/about.php b/themes/trickno/about.php
+new file mode 100644
+index 0000000..c2d397b
+--- /dev/null
++++ b/themes/trickno/about.php
+@@ -0,0 +1,21 @@
++<?php if (!defined('APPLICATION')) exit();
++/*
++Copyright 2008, 2009 Vanilla Forums Inc.
++This file is part of Garden.
++Garden is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
++Garden is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
++You should have received a copy of the GNU General Public License along with Garden.  If not, see <http://www.gnu.org/licenses/>.
++Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
++*/
++
++/**
++ * An associative array of information about this application.
++ */
++$ThemeInfo['trickno'] = array(
++   'Name' => 'trickno',
++   'Description' => "Based on Embed-Friendly v3.0",
++   'Version' => '0.1',
++   'Author' => "abutt",
++   'AuthorEmail' => 'er0k@trickno',
++   'AuthorUrl' => 'https://tricknologic.com'
++);
+diff --git a/themes/trickno/class.embedfriendlythemehooks.php b/themes/trickno/class.embedfriendlythemehooks.php
+new file mode 100755
+index 0000000..2477c9f
+--- /dev/null
++++ b/themes/trickno/class.embedfriendlythemehooks.php
+@@ -0,0 +1,100 @@
++<?php if (!defined('APPLICATION')) exit();
++/*
++Copyright 2008, 2009 Vanilla Forums Inc.
++This file is part of Garden.
++Garden is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
++Garden is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
++You should have received a copy of the GNU General Public License along with Garden.  If not, see <http://www.gnu.org/licenses/>.
++Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
++*/
++
++class TricknoThemeHooks implements Gdn_IPlugin {
++	
++   public function Setup() {
++      /*
++		// Set the order for the modules (make sure new discussion module is before content).
++		SaveToConfig('Modules.Vanilla.Content', array('MessageModule', 'Notices', 'NewConversationModule', 'NewDiscussionModule', 'Content', 'Ads'));
++		SaveToConfig('Modules.Conversations.Content', array('MessageModule', 'Notices', 'NewConversationModule', 'NewDiscussionModule', 'Content', 'Ads'));
++      */
++   }
++
++   public function OnDisable() {
++      return TRUE;
++   }
++	/*
++	public function SettingsController_AfterCurrentTheme_Handler($Sender) {
++		$SingleColumn = C('Themes.EmbedFriendly.SingleColumn');
++		echo Wrap(
++			T('This theme allows you to hide the side panel next to your forum and conversations. This is super handy if the website you are embedding in does not have a lot of width to squeeze into.')
++			.Wrap(Anchor(
++				T($SingleColumn ? 'Show the side panel' : 'Hide the side panel'),
++				'settings/embedfriendlytogglepanel/'.Gdn::Session()->TransientKey(),
++				'SmallButton'
++			), 'div')
++		, 'div', array('class' => 'Description'));
++	}
++	
++	public function SettingsController_EmbedFriendlyTogglePanel_Create($Sender) {
++		$this->_TogglePanel($Sender);
++		Redirect('settings/themes');
++	}
++	
++	public function PluginController_BeforeEmbedRecommend_Handler($Sender) {
++		$SingleColumn = C('Themes.EmbedFriendly.SingleColumn');
++		echo '<div class="EmbedRecommend">
++			<strong>Theme Options</strong>'
++			.Wrap(
++				T('This theme allows you to hide the side panel next to your forum and conversations. This is super handy if the website you are embedding in does not have a lot of width to squeeze into.')
++				.Wrap(Anchor(
++					T($SingleColumn ? 'Show the side panel' : 'Hide the side panel'),
++					'plugin/embedfriendlytogglepanel/'.Gdn::Session()->TransientKey(),
++					'SmallButton'
++				), 'div', array('style' => 'margin-top: 10px;'))
++			, 'em')
++		.'</div>';
++	}
++	
++	public function PluginController_EmbedFriendlyTogglePanel_Create($Sender) {
++		$this->_TogglePanel($Sender);
++		Redirect('plugin/embed');
++	}
++
++	private function _TogglePanel($Sender) {
++		$Sender->Permission('Garden.Settings.Manage');
++		$TransientKey = GetValue(0, $Sender->RequestArgs);
++		if (Gdn::Session()->ValidateTransientKey($TransientKey))
++			SaveToConfig('Themes.EmbedFriendly.SingleColumn', C('Themes.EmbedFriendly.SingleColumn') ? FALSE : TRUE);
++	}
++
++
++	public function Base_Render_Before($Sender) {
++		if (($Sender->MasterView == 'default' || $Sender->MasterView == '') && C('Themes.EmbedFriendly.SingleColumn'))
++			$Sender->AddCSSFile('singlecolumn.css');
++	}
++	
++   public function CategoriesController_Render_Before($Sender) {
++		$this->_AddButton($Sender, 'NewDiscussionModule');
++   }
++   
++   public function DiscussionsController_Render_Before($Sender) {
++		$this->_AddButton($Sender, 'NewDiscussionModule');
++   }
++
++   public function DiscussionController_Render_Before($Sender) {
++		$this->_AddButton($Sender, 'NewDiscussionModule');
++   }
++
++   public function DraftsController_Render_Before($Sender) {
++		$this->_AddButton($Sender, 'NewDiscussionModule');
++   }
++	
++	public function MessagesController_Render_Before($Sender) {
++		$this->_AddButton($Sender, 'NewConversationModule');
++	}
++	
++	private function _AddButton($Sender, $ModuleName) {
++		if (C('Themes.EmbedFriendly.SingleColumn'))
++			$Sender->AddModule($ModuleName, 'Content');
++	}
++   */
++}
+diff --git a/themes/trickno/design/custom.css b/themes/trickno/design/custom.css
+new file mode 100644
+index 0000000..810c225
+--- /dev/null
++++ b/themes/trickno/design/custom.css
+@@ -0,0 +1,149 @@
++/* Full-width */
++.Row {
++   width: 100%;
++}
++/* Breadcrumbs */
++.BreadcrumbsWrapper {
++   font-size: 11px;
++   padding: 6px;
++   background: #fafafa;
++   border: 1px dashed #eee;
++   border-width: 1px 0;
++   margin-bottom: 10px;
++}
++/* Transparent Head & Menu */
++#Head {
++   background: transparent;
++   color: #000;
++   padding: 4px 0;
++}
++#Head a {
++   color: #1E79A7;
++}
++#Head a:hover {
++   color: #ff0084;
++}
++.SiteTitle { display: none; }
++
++/* Panel on the right */
++#Panel { float: right; }
++#Body .ContentColumn { margin: 0 230px 0 0; }
++#Panel input.InputBox {
++   width: 192px;
++}
++
++/* Backwards compatibility for themes that extended/customized the old version */
++#Body .Wrapper #Content {
++   margin: 0 215px 0 0;
++}
++.Banner ul {
++    background: none repeat scroll 0 0 #3B5998;
++    margin: 0;
++    padding: 0;
++}
++
++#Menu {
++   margin-right: 0 !important;
++}
++.Banner ul li,
++#Menu li { display: inline; }
++.Banner ul li a,
++#Menu a { 
++   display: inline-block;
++   padding: 3px 7px;
++   font-size: 11px;
++   font-weight: bold;
++   color: #fff; 
++}
++.Banner ul li a:hover,
++#Menu a:hover {
++   text-decoration: underline;
++   color: #fff;
++}
++#Head #Search form {
++    float: right;
++    padding: 0;
++    margin-top: -30px;
++}
++#Head #Search form input.InputBox {
++   width: 204px;
++   border: 0;
++   padding: 4px;
++	margin: 0 6px 0 0;
++   background: #fff;
++   -moz-border-radius: 2px;
++   -webkit-border: 2px;
++   border-bottom: 2px;
++   color: #969696;
++   font-size: 13px;
++	vertical-align: bottom;
++}
++#Head #Search form input.Button {
++	font-size: 11px;
++	border: none;
++}
++
++
++/* If window is less than 800px wide, hide the panel for all pages except profile. */
++@media screen and (max-width: 799px) {
++   /* Hide the "started by" column of the discussions table. */
++   body.Discussions .DataTable .FirstUser { display: none; }
++   
++   /* Hide the panel on non-profile pages. */
++   #Body .Row {
++      position: relative;
++   }
++   #Body .ContentColumn {
++      padding-top: 50px;
++   }
++   .MeBox,
++   .BigButton {
++      visibility: visible;
++      position: relative;
++      width: 120px;
++      display: inline-block;
++   }
++   .BigButton {
++      padding: 8px 20px;
++   }
++   .MeBox {
++      width: 200px;
++   }
++   #Panel {
++      overflow: visible;
++      visibility: hidden;
++      position: absolute;
++      right: 2px; /* Don't know why this is adding some extra padding */
++      width: auto;
++      display: block;
++   }
++   .Column.ContentColumn {
++      margin: 0 !important;
++   }
++
++   /* Don't hide the panel on the profile page */
++   body.Profile #Body .ContentColumn {
++      padding-top: 0;
++   }
++   body.Profile .MeBox,
++   body.Profile .BigButton {
++      visibility: visible;
++      position: relative;
++      top: auto;
++      right: auto;
++      width: auto;
++   }
++   body.Profile .MeBox {
++      width: auto;
++      right: auto;
++   }
++   body.Profile #Panel {
++      visibility: visible;
++      position: relative;
++      right: auto;
++      width: 200px;
++   }
++   body.Profile .Column.ContentColumn {
++      margin: 0 220px 0 0 !important;
++   }
++}
+\ No newline at end of file
+diff --git a/themes/trickno/screenshot.png b/themes/trickno/screenshot.png
+new file mode 100644
+index 0000000..62c2d8b
+Binary files /dev/null and b/themes/trickno/screenshot.png differ
+diff --git a/themes/trickno/views/default.master.tpl b/themes/trickno/views/default.master.tpl
+new file mode 100644
+index 0000000..4ed8444
+--- /dev/null
++++ b/themes/trickno/views/default.master.tpl
+@@ -0,0 +1,44 @@
++<!DOCTYPE html>
++<html>
++<head>
++  {asset name='Head'}
++</head>
++
++<body id="{$BodyID}" class="{$BodyClass}">
++
++<div id="Frame">
++ <div id="Head">
++   <div class="Row">
++     <strong class="SiteTitle"><a href="{link path="/"}">{logo}</a></strong>
++     <ul class="SiteMenu">
++      {dashboard_link}
++      {discussions_link}
++      {activity_link}
++      {inbox_link}
++      {custom_menu}
++      {profile_link}
++      {signinout_link}
++     </ul>
++   </div>
++  </div>
++  <div id="Body">
++    <div class="Row">
++      <div class="BreadcrumbsWrapper P">{breadcrumbs}</div>
++      <div class="Column PanelColumn" id="Panel">
++         {module name="MeModule" CssClass="FlyoutRight"}
++         {asset name="Panel"}
++         <div class="SiteSearch">{searchbox}</div>
++      </div>
++      <div class="Column ContentColumn" id="Content">{asset name="Content"}</div>
++    </div>
++  </div>
++  <div id="Foot">
++    <div class="Row">
++      <a href="{vanillaurl}" class="PoweredByVanilla">Powered by Vanilla</a>
++      {asset name="Foot"}
++    </div>
++  </div>
++</div>
++{event name="AfterBody"}
++</body>
++</html>
+\ No newline at end of file

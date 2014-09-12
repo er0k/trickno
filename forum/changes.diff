@@ -1,0 +1,86 @@
+diff --git a/.gitignore b/.gitignore
+index 4b8d1eb..da2f799 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,7 +7,6 @@
+ /uploads/*.*
+ /conf/config.php
+ /conf/bootstrap.before.php
+-/conf/bootstrap.early.php
+ /conf/bootstrap.late.php
+ /conf/bootstrap.after.php
+ /conf/locale-*
+diff --git a/js/embed.js b/js/embed.js
+index 2f1e981..d14f045 100644
+--- a/js/embed.js
++++ b/js/embed.js
+@@ -281,7 +281,7 @@ window.vanilla.embed = function(host) {
+    var img = document.createElement('div');
+    img.className = 'vn-loading';
+    img.style.textAlign = 'center';
+-   img.innerHTML = window.vanilla_loadinghtml ? vanilla_loadinghtml : '<img src="http://cdn.vanillaforums.com/images/progress.gif" />';
++   img.innerHTML = window.vanilla_loadinghtml ? vanilla_loadinghtml : '<img src="ui/progress.gif" />';
+ 
+    var container = document.getElementById('vanilla-comments');
+    // Couldn't find the container, so dump it out and try again.
+@@ -348,4 +348,4 @@ try {
+    error.style.color = "#000000";
+    error.appendChild(document.createTextNode("Failed to embed Vanilla: " + e));
+    (document.getElementById('vanilla-comments')).appendChild(error);
+-}
+\ No newline at end of file
++}
+diff --git a/library/core/class.configuration.php b/library/core/class.configuration.php
+index f1e8643..b4f4a19 100755
+--- a/library/core/class.configuration.php
++++ b/library/core/class.configuration.php
+@@ -657,7 +657,7 @@ class Gdn_Configuration extends Gdn_Pluggable {
+          $Data = $Data[$Group];
+ 
+       // Do a sanity check on the config save.
+-      if ($File == $this->DefaultPath()) {
++      /* if ($File == $this->DefaultPath()) {
+          if (!isset($Data['Database'])) {
+             if ($Pm = Gdn::PluginManager()) {
+                $Pm->EventArguments['Data'] = $Data;
+@@ -666,7 +666,7 @@ class Gdn_Configuration extends Gdn_Pluggable {
+             }
+             return FALSE;
+          }
+-      }
++      } */
+ 
+       // Build string
+       $FileContents = $this->Format($Data, array(
+@@ -715,6 +715,7 @@ class Gdn_Configuration extends Gdn_Pluggable {
+       // Apply changes one by one
+       $Result = TRUE;
+       foreach ($Name as $k => $v) {
++
+          if (!$v && $RemoveEmpty) {
+             $this->Remove($k);
+          } else {
+@@ -1240,14 +1241,14 @@ class Gdn_ConfigurationSource extends Gdn_Pluggable {
+                   LogModel::Insert('Edit', 'Configuration', $LogData);
+                } catch (Exception $Ex){}
+ 
+-               if (!isset($Data['Database'])) {
++               /* if (!isset($Data['Database'])) {
+                   if ($Pm = Gdn::PluginManager()) {
+                      $Pm->EventArguments['Data'] = $Data;
+                      $Pm->EventArguments['Backtrace'] = debug_backtrace();
+                      $Pm->FireEvent('ConfigError');
+                   }
+                   return FALSE;
+-               }
++               } */
+             }
+ 
+             // Write config data to string format, ready for saving
+@@ -1301,4 +1302,4 @@ class Gdn_ConfigurationSource extends Gdn_Pluggable {
+          $this->Save();
+    }
+ 
+-}
+\ No newline at end of file
++}

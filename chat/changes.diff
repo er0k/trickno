@@ -1,0 +1,35 @@
+diff --git a/example/htaccess b/example/htaccess
+index e6d70c5..0aa626a 100644
+--- a/example/htaccess
++++ b/example/htaccess
+@@ -1,4 +1,4 @@
+ AddDefaultCharset UTF-8
+ Options +MultiViews
+ RewriteEngine On
+-RewriteRule http-bind/ http://localhost:5280/http-bind/ [P]
++RewriteRule http-bind/ http://v3.tricknologic.com:5280/http-bind/ [P]
+diff --git a/example/index.html b/example/index.html
+index a001237..79921a8 100644
+--- a/example/index.html
++++ b/example/index.html
+@@ -11,16 +11,16 @@
+ 	<script type="text/javascript" src="../candy.min.js"></script>
+ 	<script type="text/javascript">
+ 		$(document).ready(function() {
+-			Candy.init('http-bind/', {
++			Candy.init('http://v3.tricknologic.com/http-bind/', {
+ 				core: {
+ 					// only set this to true if developing / debugging errors
+-					debug: false,
++					debug: true,
+ 					// autojoin is a *required* parameter if you don't have a plugin (e.g. roomPanel) for it
+ 					//   true
+ 					//     -> fetch info from server (NOTE: does only work with openfire server)
+-					//   ['test@conference.example.com']
++					autojoin:['frogchat@party.trickno']
+ 					//     -> array of rooms to join after connecting
+-					autojoin: true
++					//autojoin: true
+ 				},
+ 				view: { assets: '../res/' }
+ 			});
