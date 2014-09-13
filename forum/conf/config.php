@@ -45,7 +45,6 @@ $Configuration['Garden']['InstallationID'] = 'FA4F-26B2F70E-88E6393B';
 $Configuration['Garden']['InstallationSecret'] = 'e299adbdad86ae8e9b1b9817b5034916ac9faf1f';
 $Configuration['Garden']['Theme'] = 'trickno';
 $Configuration['Garden']['Embed']['Allow'] = FALSE;
-
 $Configuration['Garden']['Embed']['RemoteUrl'] = 'https://tricknologic.com/v3/forum.html';
 $Configuration['Garden']['Embed']['ForceDashboard'] = FALSE;
 $Configuration['Garden']['Embed']['ForceForum'] = '1';
@@ -70,4 +69,4 @@ $Configuration['Routes']['DefaultController'] = 'discussions';
 // Vanilla
 $Configuration['Vanilla']['Version'] = '2.2.16';
 
-// Last edited by er0k (127.0.0.1)2014-09-12 06:33:05
+// Last edited by er0k (127.0.0.1)2014-09-13 21:58:25
