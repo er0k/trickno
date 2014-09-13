@@ -44,16 +44,18 @@ $Configuration['Garden']['Installed'] = TRUE;
 $Configuration['Garden']['InstallationID'] = 'FA4F-26B2F70E-88E6393B';
 $Configuration['Garden']['InstallationSecret'] = 'e299adbdad86ae8e9b1b9817b5034916ac9faf1f';
 $Configuration['Garden']['Theme'] = 'trickno';
-$Configuration['Garden']['Embed']['Allow'] = TRUE;
+$Configuration['Garden']['Embed']['Allow'] = FALSE;
+
 $Configuration['Garden']['Embed']['RemoteUrl'] = 'https://tricknologic.com/v3/forum.html';
 $Configuration['Garden']['Embed']['ForceDashboard'] = FALSE;
 $Configuration['Garden']['Embed']['ForceForum'] = '1';
-$Configuration['Garden']['TrustedDomains'] = array('v3.tricknologic.com', 'tricknologic.com', 'whatever.com', 'asdfasdf');
+$Configuration['Garden']['TrustedDomains'] = array('v3.tricknologic.com', 'tricknologic.com', 'localhost');
 $Configuration['Garden']['SignIn']['Popup'] = '1';
 $Configuration['Garden']['Format']['Hashtags'] = FALSE;
 $Configuration['Garden']['Html']['SafeStyles'] = FALSE;
 $Configuration['Garden']['HomepageTitle'] = 'v3.trickno';
 $Configuration['Garden']['Description'] = '';
+$Configuration['Garden']['Errors']['MasterView'] = 'deverror.master.php';
 
 // Plugins
 $Configuration['Plugins']['GettingStarted']['Dashboard'] = '1';
