@@ -70,4 +70,4 @@ $Configuration['Routes']['DefaultController'] = 'discussions';
 // Vanilla
 $Configuration['Vanilla']['Version'] = '2.2.16';
 
-// Last edited by er0k (68.82.91.127)2014-09-12 06:33:05
+// Last edited by er0k (127.0.0.1)2014-09-12 06:33:05
